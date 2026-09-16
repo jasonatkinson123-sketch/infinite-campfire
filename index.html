@@ -3,120 +3,400 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f4eddf">
-  <meta name="description" content="Infinite Campfire — a collection of learning adventures.">
+  <meta name="theme-color" content="#f3eadb">
+  <meta name="description" content="Infinite Campfire — five playful learning destinations.">
   <title>Infinite Campfire</title>
   <style>
     :root {
-      --paper: #f4eddf;
-      --ink: #171613;
-      --red: #d43c2f;
-      --quiet-red: #b82f27;
-      --line: #26231e;
-      --max: 1180px;
-      font-family: "Univers", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --paper: #f3eadb;
+      --ink: #090908;
+      --red: #d52d21;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       color: var(--ink);
       background: var(--paper);
     }
-    * { box-sizing: border-box; }
-    html { min-width: 320px; background: var(--paper); }
-    body { margin: 0; min-height: 100svh; overflow-x: hidden; background: var(--paper); }
-    body::before {
-      content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .18; z-index: 10;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      min-width: 320px;
+      overflow-x: hidden;
+      background: var(--paper);
     }
-    a { color: inherit; }
-    .skip { position: fixed; left: 1rem; top: -5rem; z-index: 50; background: var(--ink); color: var(--paper); padding: .75rem 1rem; }
-    .skip:focus { top: 1rem; }
-    .scene { position: relative; min-height: 100svh; isolation: isolate; padding: clamp(1.5rem, 4vw, 3.5rem) 1rem 2rem; display: grid; place-items: center; }
-    .scene::before { content: ""; position: absolute; inset: auto 0 0; height: 34%; background: var(--paper); border-top: 2px solid var(--ink); z-index: -3; }
-    .forest { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -2; }
-    .tree { position: absolute; bottom: 18%; width: clamp(54px, 9vw, 126px); height: clamp(145px, 25vw, 270px); background: var(--ink); clip-path: polygon(50% 0,61% 17%,55% 17%,73% 38%,64% 38%,88% 65%,69% 65%,100% 91%,57% 84%,57% 100%,43% 100%,43% 84%,0 91%,31% 65%,12% 65%,36% 38%,27% 38%,45% 17%,39% 17%); opacity: .98; }
-    .tree::after { content: ""; position: absolute; width: 10%; height: 100%; left: 45%; top: 34%; background: var(--paper); opacity: .2; }
-    .tree.left-a { left: -1.5%; transform: scale(1.2); } .tree.left-b { left: 10%; transform: scale(.68); bottom: 21%; }
-    .tree.right-a { right: -1.5%; transform: scale(1.2); } .tree.right-b { right: 11%; transform: scale(.65); bottom: 20%; }
-    .rock { position: absolute; bottom: 8%; width: clamp(95px, 16vw, 220px); height: clamp(38px, 7vw, 80px); background: var(--ink); clip-path: polygon(0 100%,11% 45%,35% 28%,57% 0,80% 21%,100% 100%); }
-    .rock.left { left: 3%; } .rock.right { right: 3%; transform: scaleX(-1); }
-    .trail { position: absolute; left: 50%; bottom: 0; width: clamp(170px, 26vw, 330px); height: 22%; transform: translateX(-50%); border-left: 2px solid var(--ink); border-right: 2px solid var(--ink); clip-path: polygon(44% 0,56% 0,100% 100%,0 100%); opacity: .9; }
-    .wrap { width: min(var(--max), 100%); display: grid; grid-template-rows: auto 1fr auto; gap: clamp(1rem, 2.8vw, 2rem); position: relative; }
-    header { text-align: center; }
-    h1 { margin: 0; font-size: clamp(2.2rem, 6.5vw, 5.7rem); line-height: .94; letter-spacing: .12em; font-weight: 300; text-indent: .12em; white-space: nowrap; }
-    .subtitle { margin: .7rem 0 0; font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 400; }
-    .hub { position: relative; min-height: clamp(480px, 57vw, 650px); display: grid; place-items: center; }
-    .post { position: absolute; top: 9%; bottom: 10%; left: 50%; width: clamp(19px, 2.4vw, 30px); transform: translateX(-50%); background: var(--paper); border: 3px solid var(--ink); border-radius: 3px; z-index: 1; }
-    .post::before, .post::after { content: ""; position: absolute; left: 50%; width: 6px; height: 100%; background: var(--ink); opacity: .13; transform: translateX(-50%); }
-    .post::after { left: 71%; width: 2px; opacity: .42; }
-    .bird-layer { position: absolute; z-index: 5; top: 1%; left: 50%; width: clamp(72px, 9vw, 108px); transform: translateX(-50%); pointer-events: none; }
-    .bird-layer svg { display: block; width: 100%; height: auto; }
-    .bird-layer::after { content: ""; display: block; margin: -2px auto 0; width: 42%; height: 4px; background: var(--ink); border-radius: 50%; opacity: .55; }
-    #bird-model-slot { position: absolute; inset: 0; pointer-events: none; }
-    .sign-list { width: 100%; position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.9rem, 2vw, 1.35rem) clamp(2.7rem, 8vw, 7.2rem); align-content: center; }
-    .sign { min-height: clamp(78px, 10vw, 108px); display: flex; align-items: center; gap: clamp(.7rem, 1.7vw, 1.25rem); padding: 1rem clamp(.9rem, 2vw, 1.6rem); text-decoration: none; background: var(--paper); border: 3px solid var(--ink); outline: 1px solid var(--ink); outline-offset: -8px; box-shadow: 5px 5px 0 var(--ink); position: relative; transition: transform .16s ease, color .16s ease, background .16s ease, box-shadow .16s ease; }
-    .sign::before { content: ""; position: absolute; inset: 9px; border-top: 1px solid rgba(23,22,19,.28); border-bottom: 1px solid rgba(23,22,19,.2); pointer-events: none; }
-    .sign.left { justify-self: start; padding-right: clamp(2.1rem, 4vw, 4.5rem); clip-path: polygon(0 0,100% 0,calc(100% - 32px) 50%,100% 100%,0 100%); }
-    .sign.right { justify-self: end; padding-left: clamp(2.1rem, 4vw, 4.5rem); clip-path: polygon(32px 0,100% 0,100% 100%,32px 100%,0 50%); }
-    .sign:hover { transform: translateY(-4px); background: #fff9ee; box-shadow: 7px 8px 0 var(--red); }
-    .sign:focus-visible { outline: 3px solid var(--red); outline-offset: 5px; }
-    .sign-icon { width: clamp(34px, 4vw, 46px); height: clamp(34px, 4vw, 46px); color: var(--red); flex: 0 0 auto; position: relative; z-index: 1; }
-    .sign-icon svg { width: 100%; height: 100%; stroke: currentColor; fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
-    .sign-label { position: relative; z-index: 1; font-size: clamp(.92rem, 1.7vw, 1.35rem); font-weight: 300; letter-spacing: .015em; line-height: 1.08; }
-    .sign-label small { display: block; margin-top: .35rem; font-size: .61em; letter-spacing: .12em; text-transform: uppercase; color: var(--quiet-red); }
-    .fire { position: absolute; z-index: 4; left: 50%; bottom: -1.5%; width: clamp(92px, 12vw, 135px); transform: translateX(-50%); pointer-events: none; }
-    .fire svg { width: 100%; height: auto; display: block; }
-    .ground-note { text-align: center; margin: 0; font-size: .66rem; letter-spacing: .15em; text-transform: uppercase; }
-    footer { display: flex; justify-content: center; gap: 1.25rem; align-items: center; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; }
-    footer a { text-underline-offset: .25em; }
-    @media (max-width: 720px) {
-      .scene { padding: 1.4rem max(1rem, env(safe-area-inset-right)) 1.25rem max(1rem, env(safe-area-inset-left)); align-items: start; }
-      h1 { font-size: clamp(1.8rem, 11.5vw, 3rem); letter-spacing: .09em; text-indent: .09em; white-space: normal; }
-      .subtitle { font-size: .58rem; letter-spacing: .14em; }
-      .hub { min-height: 0; padding: 3.8rem 0 7.4rem; }
-      .post { top: 7%; bottom: 5%; }
-      .bird-layer { top: 0; width: 76px; }
-      .sign-list { grid-template-columns: 1fr; gap: .75rem; }
-      .sign, .sign.left, .sign.right { width: min(100%, 430px); justify-self: center; min-height: 66px; padding: .8rem 1rem; clip-path: none; box-shadow: 4px 4px 0 var(--ink); }
-      .sign:hover { transform: none; }
-      .sign-label { font-size: 1rem; }
-      .sign-label small { display: none; }
-      .sign-icon { width: 33px; height: 33px; }
-      .fire { bottom: -.8%; }
-      .tree { opacity: .96; bottom: 7%; } .tree.left-a { left: -9%; transform: scale(.8); } .tree.right-a { right: -9%; transform: scale(.8); } .tree.left-b,.tree.right-b { display: none; }
-      .rock { bottom: 1%; } .trail { height: 12%; }
-      footer { padding-bottom: env(safe-area-inset-bottom); }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      overflow-x: hidden;
+      background: var(--paper);
     }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: .75rem;
+      left: .75rem;
+      padding: .7rem .9rem;
+      color: var(--paper);
+      background: var(--ink);
+      text-decoration: none;
+      transform: translateY(-200%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    main {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+    }
+
+    .poster-stage {
+      container-type: inline-size;
+      position: relative;
+      width: min(100vw, calc(100svh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      isolation: isolate;
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    .desktop-art {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    h1 {
+      position: absolute;
+      z-index: 2;
+      top: 5.25%;
+      left: 0;
+      width: 100%;
+      margin: 0;
+      color: #000;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 5.55cqw;
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: .105em;
+      text-align: center;
+      text-indent: .105em;
+      white-space: nowrap;
+    }
+
+    .bird-layer {
+      position: absolute;
+      z-index: 5;
+      top: 15.25%;
+      left: 43.05%;
+      width: 7.3%;
+      pointer-events: none;
+    }
+
+    #bird-model-slot { pointer-events: none; }
+
+    .bird-static {
+      display: block;
+      width: 100%;
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .destination-list {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .destination-item { position: absolute; }
+    .destination-item:nth-child(1) { left: 21.42%; top: 27.66%; width: 27.99%; height: 13.66%; }
+    .destination-item:nth-child(2) { left: 50.59%; top: 27.66%; width: 28.06%; height: 13.66%; }
+    .destination-item:nth-child(3) { left: 21.42%; top: 43.40%; width: 27.99%; height: 13.66%; }
+    .destination-item:nth-child(4) { left: 50.59%; top: 43.40%; width: 28.06%; height: 13.66%; }
+    .destination-item:nth-child(5) { left: 50.59%; top: 58.80%; width: 27.60%; height: 13.77%; }
+
+    .destination-link {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      color: #000;
+      text-decoration: none;
+      outline: none;
+    }
+
+    .mobile-sign-art { display: none; }
+
+    .destination-label {
+      position: absolute;
+      top: 50%;
+      color: #000;
+      font-size: 2.05cqw;
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -.015em;
+      transform: translateY(-50%);
+      white-space: nowrap;
+    }
+
+    .destination-item:nth-child(1) .destination-label { left: 38.7%; }
+    .destination-item:nth-child(2) .destination-label { left: 43.0%; }
+    .destination-item:nth-child(3) .destination-label { left: 38.7%; }
+    .destination-item:nth-child(4) .destination-label { left: 41.7%; }
+    .destination-item:nth-child(5) .destination-label { left: 53.4%; }
+
+    .destination-link::after {
+      content: "";
+      position: absolute;
+      left: var(--underline-left, 39%);
+      right: 5%;
+      bottom: 19%;
+      height: 2px;
+      background: var(--red);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 150ms ease;
+    }
+
+    .destination-item:nth-child(2) .destination-link { --underline-left: 43%; }
+    .destination-item:nth-child(4) .destination-link { --underline-left: 42%; }
+    .destination-item:nth-child(5) .destination-link { --underline-left: 53%; }
+
+    .destination-link:hover::after,
+    .destination-link:focus-visible::after { transform: scaleX(1); }
+
+    .destination-link:focus-visible {
+      outline: 3px solid var(--red);
+      outline-offset: 4px;
+    }
+
+    .mobile-scenery { display: none; }
+
+    @media (max-width: 700px) {
+      main { display: block; }
+
+      .poster-stage {
+        width: 100%;
+        min-height: 1030px;
+        aspect-ratio: auto;
+        overflow: hidden;
+        background: var(--paper);
+      }
+
+      .poster-stage::before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        inset: 0;
+        opacity: .31;
+        background-image: url("./assets/mobile-ground-scene.png");
+        background-repeat: repeat-y;
+        background-position: center bottom;
+        background-size: auto 280px;
+      }
+
+      .desktop-art { display: none; }
+
+      h1 {
+        top: max(28px, env(safe-area-inset-top));
+        padding: 0 10px;
+        font-size: clamp(27px, 7.65vw, 35px);
+        line-height: 1;
+        letter-spacing: .075em;
+        text-indent: .075em;
+      }
+
+      .bird-layer {
+        top: 78px;
+        left: 50%;
+        width: 72px;
+        transform: translateX(-50%);
+      }
+
+      .mobile-scenery { display: block; }
+
+      .mobile-tree {
+        position: absolute;
+        z-index: 1;
+        top: 112px;
+        width: 44%;
+        height: auto;
+        opacity: .72;
+        pointer-events: none;
+      }
+
+      .mobile-tree-left { left: -24%; }
+      .mobile-tree-right { right: -24%; }
+
+      .mobile-post {
+        position: absolute;
+        z-index: 2;
+        top: 126px;
+        bottom: 265px;
+        left: 50%;
+        width: 39px;
+        transform: translateX(-50%);
+        background: url("./assets/mobile-post-upper.png") center top / 100% auto repeat-y;
+        pointer-events: none;
+      }
+
+      .destination-list {
+        position: relative;
+        z-index: 4;
+        inset: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        width: 100%;
+        margin: 0;
+        padding: 145px 10px 0;
+      }
+
+      .destination-item,
+      .destination-item:nth-child(n) {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        height: auto;
+      }
+
+      .destination-link {
+        aspect-ratio: var(--sign-ratio);
+        min-height: 88px;
+      }
+
+      .destination-item:nth-child(1) .destination-link { --sign-ratio: 436 / 122; }
+      .destination-item:nth-child(2) .destination-link { --sign-ratio: 440 / 122; }
+      .destination-item:nth-child(3) .destination-link { --sign-ratio: 436 / 122; }
+      .destination-item:nth-child(4) .destination-link { --sign-ratio: 440 / 122; }
+      .destination-item:nth-child(5) .destination-link { --sign-ratio: 424 / 118; }
+
+      .mobile-sign-art {
+        display: block;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .destination-label,
+      .destination-item:nth-child(n) .destination-label {
+        top: 50%;
+        left: var(--label-left);
+        width: calc(94% - var(--label-left));
+        font-size: clamp(20px, 5.8vw, 25px);
+        line-height: 1.02;
+        letter-spacing: -.025em;
+        white-space: nowrap;
+      }
+
+      .destination-item:nth-child(1) { --label-left: 39%; }
+      .destination-item:nth-child(2) { --label-left: 42%; }
+      .destination-item:nth-child(3) { --label-left: 39%; }
+      .destination-item:nth-child(4) { --label-left: 41%; }
+      .destination-item:nth-child(5) { --label-left: 52%; }
+
+      .destination-link::after {
+        left: var(--label-left);
+        right: 6%;
+        bottom: 17%;
+      }
+
+      .destination-link:focus-visible {
+        outline-width: 3px;
+        outline-offset: 2px;
+      }
+
+      .mobile-fire {
+        position: absolute;
+        z-index: 3;
+        left: 50%;
+        bottom: 5px;
+        width: min(128%, 480px);
+        height: auto;
+        transform: translateX(-50%);
+        pointer-events: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <a class="skip" href="#destinations">Skip to destinations</a>
-  <main class="scene">
-    <div class="forest" aria-hidden="true">
-      <i class="tree left-a"></i><i class="tree left-b"></i><i class="tree right-a"></i><i class="tree right-b"></i>
-      <i class="rock left"></i><i class="rock right"></i><i class="trail"></i>
-    </div>
-    <div class="wrap">
-      <header>
-        <h1>INFINITE CAMPFIRE</h1>
-        <p class="subtitle">Five paths. One clearing.</p>
-      </header>
-      <section class="hub" id="destinations" aria-label="Learning destinations">
-        <div class="post" aria-hidden="true"></div>
-        <div class="bird-layer" aria-hidden="true">
-          <!-- Replace this SVG with a transparent bird.glb renderer inside #bird-model-slot later. -->
-          <div id="bird-model-slot"></div>
-          <svg viewBox="0 0 128 112" role="img"><path fill="#087dc2" d="M18 61C31 23 78 8 103 27c18 14 9 49-22 58-27 9-53-3-63-24Z"/><path fill="#1ca571" d="M28 63c11-25 38-31 57-19-5 28-26 44-49 42Z"/><path fill="#ffd539" d="M50 71c17-8 38-3 47 12-21 23-51 13-59-3Z"/><path fill="#f2686b" d="M77 38c21-5 37 8 34 26-7 18-31 21-43 4Z"/><path fill="#0f9ed0" d="M19 70 3 91l30-10Z"/><path fill="#171613" d="m109 39 17 8-16 8Z"/><circle cx="103" cy="32" r="5.5" fill="#171613"/><circle cx="105" cy="30" r="1.7" fill="#f4eddf"/><path d="M58 88c0 9-3 13-7 17m16-18c1 8 5 12 9 16" fill="none" stroke="#171613" stroke-width="3" stroke-linecap="round"/></svg>
+  <a class="skip-link" href="#destinations">Skip to destinations</a>
+  <main>
+    <section class="poster-stage" aria-labelledby="page-title">
+      <img class="desktop-art" src="./assets/campfire-desktop-master.png" alt="" aria-hidden="true">
+      <h1 id="page-title">INFINITE CAMPFIRE</h1>
+
+      <div class="bird-layer" aria-hidden="true">
+        <div id="bird-model-slot">
+          <img class="bird-static" src="./assets/bird-static.png" alt="">
         </div>
-        <nav class="sign-list" aria-label="Infinite Campfire destinations">
-          <a class="sign left" href="https://jasonatkinson123-sketch.github.io/synonym-forest/" aria-label="Enter Synonym Forest"><span class="sign-icon"><svg viewBox="0 0 48 48"><path d="M7 9c8-3 15-1 17 4v27c-4-5-10-7-17-4V9Zm34 0c-8-3-15-1-17 4v27c4-5 10-7 17-4V9Z"/><path d="M24 13v27"/></svg></span><span class="sign-label">Synonym Forest<small>Words &amp; admissions prep</small></span></a>
-          <a class="sign right" href="https://jasonatkinson123-sketch.github.io/owl-attack/" aria-label="Play Owl Attack"><span class="sign-icon"><svg viewBox="0 0 48 48"><path d="M12 17 7 9l10 4a17 17 0 0 1 14 0l10-4-5 8c4 8 2 22-12 22S8 25 12 17Z"/><circle cx="18" cy="24" r="3"/><circle cx="30" cy="24" r="3"/><path d="m21 30 3 3 3-3"/></svg></span><span class="sign-label">Owl Attack<small>Number adventures</small></span></a>
-          <a class="sign left" href="https://jasonatkinson123-sketch.github.io/french-prepositions/" aria-label="Play Prépositions françaises"><span class="sign-icon"><svg viewBox="0 0 48 48"><path d="M24 6 10 41h28L24 6Z"/><path d="M18 41h12M16 33h16M18 25h12M21 17h6"/></svg></span><span class="sign-label">Prépositions françaises<small>French map practice</small></span></a>
-          <a class="sign right" href="https://derby-character-cash.jjason123.chatgpt.site/" aria-label="Open Derby Character Cash"><span class="sign-icon"><svg viewBox="0 0 48 48"><path d="M11 42V6m2 3h27L28 19l12 10H13"/><circle cx="28" cy="34" r="7"/><path d="M28 30v8m-3-6c1-2 5-2 6 0 2 4-6 2-6 6"/></svg></span><span class="sign-label">Derby Character Cash<small>Recognition made visible</small></span></a>
-          <a class="sign right" href="https://jasonatkinson123-sketch.github.io/jazz-ear-trainer/" aria-label="Open Jazz Ear Trainer"><span class="sign-icon"><svg viewBox="0 0 48 48"><path d="M7 27h14l5-5v14l-5-5H7v-4Zm19-5c8-1 12 4 12 8s-4 9-12 8"/><path d="M39 18c6 5 6 17 0 22"/><path d="M13 39c3-2 7-2 10 0"/></svg></span><span class="sign-label">Jazz Ear Trainer<small>DEHI fluency practice</small></span></a>
-        </nav>
-        <div class="fire" aria-hidden="true"><svg viewBox="0 0 138 126"><path fill="#171613" d="m20 115 98 0-13-14 9-7-22-15 5-11-23 4-6-15-9 17-22-5 6 14-22 15 10 8-11 13Z"/><path fill="#d43c2f" d="M69 107c-26 0-36-20-25-40 3 13 10 16 12 10 3-9-4-15 8-33 0 15 9 20 11 9 2-10 6-16 12-21-3 17 17 28 12 48-4 17-13 27-30 27Z"/><path fill="#f4eddf" d="M69 102c-12 0-18-9-12-20 2 7 7 8 8 3 2-5-1-9 5-17 0 8 5 10 6 4 1-4 3-7 5-9-2 9 8 15 5 27-2 7-7 12-17 12Z"/><path d="M18 117 55 98m-19 19 51-25m-18 25 49-22" stroke="#171613" stroke-width="7" stroke-linecap="round"/></svg></div>
-      </section>
-      <footer><span>Choose a path</span><a href="#destinations">Back to signs</a></footer>
-    </div>
+      </div>
+
+      <div class="mobile-scenery" aria-hidden="true">
+        <img class="mobile-tree mobile-tree-left" src="./assets/mobile-forest-left.png" alt="">
+        <img class="mobile-tree mobile-tree-right" src="./assets/mobile-forest-right.png" alt="">
+        <div class="mobile-post"></div>
+        <img class="mobile-fire" src="./assets/mobile-campfire.png" alt="">
+      </div>
+
+      <nav id="destinations" aria-label="Infinite Campfire destinations">
+        <ol class="destination-list">
+          <li class="destination-item">
+            <a class="destination-link" href="https://jasonatkinson123-sketch.github.io/synonym-forest/" aria-label="Open Synonym Forest">
+              <img class="mobile-sign-art" src="./assets/sign-synonym.png" alt="" aria-hidden="true">
+              <span class="destination-label">Synonym Forest</span>
+            </a>
+          </li>
+          <li class="destination-item">
+            <a class="destination-link" href="https://jasonatkinson123-sketch.github.io/owl-attack/" aria-label="Open Owl Attack">
+              <img class="mobile-sign-art" src="./assets/sign-owl.png" alt="" aria-hidden="true">
+              <span class="destination-label">Owl Attack</span>
+            </a>
+          </li>
+          <li class="destination-item">
+            <a class="destination-link" href="https://jasonatkinson123-sketch.github.io/french-prepositions/" aria-label="Open Prépositions françaises">
+              <img class="mobile-sign-art" src="./assets/sign-french.png" alt="" aria-hidden="true">
+              <span class="destination-label">Prépositions<br>françaises</span>
+            </a>
+          </li>
+          <li class="destination-item">
+            <a class="destination-link" href="https://derby-character-cash.jjason123.chatgpt.site/" aria-label="Open Derby Character Cash">
+              <img class="mobile-sign-art" src="./assets/sign-derby.png" alt="" aria-hidden="true">
+              <span class="destination-label">Derby<br>Character Cash</span>
+            </a>
+          </li>
+          <li class="destination-item">
+            <a class="destination-link" href="https://jasonatkinson123-sketch.github.io/jazz-ear-trainer/" aria-label="Open Jazz Ear Trainer">
+              <img class="mobile-sign-art" src="./assets/sign-jazz.png" alt="" aria-hidden="true">
+              <span class="destination-label">Jazz Ear<br>Trainer</span>
+            </a>
+          </li>
+        </ol>
+      </nav>
+    </section>
   </main>
 </body>
 </html>
