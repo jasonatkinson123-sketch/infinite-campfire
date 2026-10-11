@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f3eadb">
-  <meta name="description" content="Infinite Campfire — five playful learning destinations.">
+  <meta name="description" content="Infinite Campfire — six playful learning destinations.">
   <title>Infinite Campfire</title>
   <style>
     :root {
@@ -123,7 +123,8 @@
     .destination-item:nth-child(2) { left: 50.59%; top: 27.66%; width: 28.06%; height: 13.66%; }
     .destination-item:nth-child(3) { left: 21.42%; top: 43.40%; width: 27.99%; height: 13.66%; }
     .destination-item:nth-child(4) { left: 50.59%; top: 43.40%; width: 28.06%; height: 13.66%; }
-    .destination-item:nth-child(5) { left: 50.59%; top: 58.80%; width: 27.60%; height: 13.77%; }
+    .destination-item:nth-child(5) { left: 21.42%; top: 58.80%; width: 27.99%; height: 13.77%; }
+    .destination-item:nth-child(6) { left: 50.59%; top: 58.80%; width: 27.60%; height: 13.77%; }
 
     .destination-link {
       position: relative;
@@ -136,6 +137,17 @@
     }
 
     .mobile-sign-art { display: none; }
+
+    .extra-sign-art {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      pointer-events: none;
+      user-select: none;
+    }
 
     .destination-label {
       position: absolute;
@@ -153,7 +165,8 @@
     .destination-item:nth-child(2) .destination-label { left: 43.0%; }
     .destination-item:nth-child(3) .destination-label { left: 38.7%; }
     .destination-item:nth-child(4) .destination-label { left: 41.7%; }
-    .destination-item:nth-child(5) .destination-label { left: 53.4%; }
+    .destination-item:nth-child(5) .destination-label { left: 38.7%; }
+    .destination-item:nth-child(6) .destination-label { left: 53.4%; }
 
     .destination-link::after {
       content: "";
@@ -170,7 +183,7 @@
 
     .destination-item:nth-child(2) .destination-link { --underline-left: 43%; }
     .destination-item:nth-child(4) .destination-link { --underline-left: 42%; }
-    .destination-item:nth-child(5) .destination-link { --underline-left: 53%; }
+    .destination-item:nth-child(6) .destination-link { --underline-left: 53%; }
 
     .destination-link:hover::after,
     .destination-link:focus-visible::after { transform: scaleX(1); }
@@ -279,7 +292,8 @@
       .destination-item:nth-child(2) .destination-link { --sign-ratio: 440 / 122; }
       .destination-item:nth-child(3) .destination-link { --sign-ratio: 436 / 122; }
       .destination-item:nth-child(4) .destination-link { --sign-ratio: 440 / 122; }
-      .destination-item:nth-child(5) .destination-link { --sign-ratio: 424 / 118; }
+      .destination-item:nth-child(5) .destination-link { --sign-ratio: 436 / 122; }
+      .destination-item:nth-child(6) .destination-link { --sign-ratio: 424 / 118; }
 
       .mobile-sign-art {
         display: block;
@@ -307,7 +321,8 @@
       .destination-item:nth-child(2) { --label-left: 42%; }
       .destination-item:nth-child(3) { --label-left: 39%; }
       .destination-item:nth-child(4) { --label-left: 41%; }
-      .destination-item:nth-child(5) { --label-left: 52%; }
+      .destination-item:nth-child(5) { --label-left: 39%; }
+      .destination-item:nth-child(6) { --label-left: 52%; }
 
       .destination-link::after {
         left: var(--label-left);
@@ -386,6 +401,12 @@
             <a class="destination-link" href="https://derby-character-cash.jjason123.chatgpt.site/" aria-label="Open Derby Character Cash">
               <img class="mobile-sign-art" src="./assets/sign-derby.png" alt="" aria-hidden="true">
               <span class="destination-label">Derby<br>Character Cash</span>
+            </a>
+          </li>
+          <li class="destination-item">
+            <a class="destination-link" href="https://jasonatkinson123-sketch.github.io/lantern-hollow/" aria-label="Open Lantern Hollow">
+              <img class="extra-sign-art" src="./assets/sign-lantern.svg" alt="" aria-hidden="true">
+              <span class="destination-label">Lantern Hollow</span>
             </a>
           </li>
           <li class="destination-item">
