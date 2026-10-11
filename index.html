@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f3eadb">
-  <meta name="description" content="Infinite Campfire — six playful learning destinations.">
+  <meta name="description" content="Infinite Campfire — seven playful learning destinations.">
   <title>Infinite Campfire</title>
   <style>
     :root {
@@ -125,6 +125,7 @@
     .destination-item:nth-child(4) { left: 50.59%; top: 43.40%; width: 28.06%; height: 13.66%; }
     .destination-item:nth-child(5) { left: 21.42%; top: 58.80%; width: 27.99%; height: 13.77%; }
     .destination-item:nth-child(6) { left: 50.59%; top: 58.80%; width: 27.60%; height: 13.77%; }
+    .destination-item--starling { left: 53.7%; top: 16.3%; width: 24.8%; height: 10.9%; }
 
     .destination-link {
       position: relative;
@@ -167,6 +168,7 @@
     .destination-item:nth-child(4) .destination-label { left: 41.7%; }
     .destination-item:nth-child(5) .destination-label { left: 38.7%; }
     .destination-item:nth-child(6) .destination-label { left: 53.4%; }
+    .destination-item--starling .destination-label { left: 36%; font-size: 1.65cqw; font-weight: 500; }
 
     .destination-link::after {
       content: "";
@@ -184,6 +186,7 @@
     .destination-item:nth-child(2) .destination-link { --underline-left: 43%; }
     .destination-item:nth-child(4) .destination-link { --underline-left: 42%; }
     .destination-item:nth-child(6) .destination-link { --underline-left: 53%; }
+    .destination-item--starling .destination-link { --underline-left: 36%; }
 
     .destination-link:hover::after,
     .destination-link:focus-visible::after { transform: scaleX(1); }
@@ -200,7 +203,7 @@
 
       .poster-stage {
         width: 100%;
-        min-height: 1030px;
+        min-height: 1130px;
         aspect-ratio: auto;
         overflow: hidden;
         background: var(--paper);
@@ -294,6 +297,7 @@
       .destination-item:nth-child(4) .destination-link { --sign-ratio: 440 / 122; }
       .destination-item:nth-child(5) .destination-link { --sign-ratio: 436 / 122; }
       .destination-item:nth-child(6) .destination-link { --sign-ratio: 424 / 118; }
+      .destination-item--starling .destination-link { --sign-ratio: 436 / 122; }
 
       .mobile-sign-art {
         display: block;
@@ -323,6 +327,8 @@
       .destination-item:nth-child(4) { --label-left: 41%; }
       .destination-item:nth-child(5) { --label-left: 39%; }
       .destination-item:nth-child(6) { --label-left: 52%; }
+      .destination-item--starling { order: -1; --label-left: 37%; }
+      .destination-item--starling .destination-label { font-size: clamp(20px, 5.6vw, 25px); }
 
       .destination-link::after {
         left: var(--label-left);
@@ -413,6 +419,12 @@
             <a class="destination-link" href="https://jasonatkinson123-sketch.github.io/jazz-ear-trainer/" aria-label="Open Jazz Ear Trainer">
               <img class="mobile-sign-art" src="./assets/sign-jazz.png" alt="" aria-hidden="true">
               <span class="destination-label">Jazz Ear<br>Trainer</span>
+            </a>
+          </li>
+          <li class="destination-item destination-item--starling">
+            <a class="destination-link" href="./starling-salvage/" aria-label="Open Starling Salvage">
+              <img class="extra-sign-art" src="./assets/sign-starling.svg" alt="" aria-hidden="true">
+              <span class="destination-label">Starling Salvage</span>
             </a>
           </li>
         </ol>
