@@ -1,0 +1,255 @@
+/* Starling Salvage: Atari 2600-inspired presentation.
+   All learning, progress, audio, rewards and navigation remain in the existing scripts.
+   This stylesheet intentionally loads after style.css. */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  --bg:#050507;
+  --panel:#080914;
+  --line:#6259b8;
+  --muted:#cbc8d6;
+  --cream:#f0ede5;
+  --orange:#f57b39;
+  --mint:#7dea7d;
+  --atari-purple:#8a75c7;
+  --pixel-font:'Press Start 2P',ui-monospace,monospace;
+}
+html{background:#050507}
+body{
+  background-color:#050507;
+  background-image:
+    linear-gradient(#f2eee8 0 0),linear-gradient(#f2eee8 0 0),
+    linear-gradient(#f2eee8 0 0),linear-gradient(#f2eee8 0 0),
+    linear-gradient(#f2eee8 0 0),linear-gradient(#f2eee8 0 0),
+    linear-gradient(#dea35c 0 0),linear-gradient(#6887d1 0 0),
+    linear-gradient(#f2eee8 0 0),linear-gradient(#f2eee8 0 0),
+    linear-gradient(#f2eee8 0 0),linear-gradient(#dea35c 0 0);
+  background-position:7% 19%,17% 40%,88% 15%,72% 52%,46% 81%,92% 85%,31% 21%,79% 76%,6% 73%,65% 35%,37% 59%,52% 12%;
+  background-size:3px 3px,4px 4px,3px 3px,3px 3px,4px 4px,3px 3px,3px 3px,4px 4px,3px 3px,3px 3px,3px 3px,3px 3px;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+  color:var(--cream);
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+body::before{display:none}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:20;
+  opacity:.09;background:repeating-linear-gradient(to bottom,transparent 0 3px,#aeb2bc 3px 4px);
+}
+h1,h2,h3,.brand,.eyebrow,.tag,.mission-top,.arcade-head h1{
+  font-family:var(--pixel-font);
+}
+p{color:#d3d1da;line-height:1.75}
+button{touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:3px solid #ffdb64;outline-offset:4px}
+header{max-width:1050px;min-height:100px;height:auto;gap:16px;border-bottom:5px solid #363d93;padding:22px 22px}
+.brand{
+  font-size:clamp(13px,2vw,19px);line-height:2.05;letter-spacing:0;
+  color:var(--orange);text-decoration:none;text-shadow:none;
+}
+.brand span:last-child{color:#f6bb52;font-weight:400}
+.mark{color:#ffdc63;font-size:21px;margin-right:10px;text-shadow:none}
+.audio-controls{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}
+.quiet,.primary,.answer,.sector{
+  border-radius:0;box-shadow:none;transform:none;transition:background-color .1s ease,color .1s ease;
+}
+.quiet{
+  border:2px solid #77749e;background:#080914;color:#eee9e5;
+  font-size:12px;padding:12px 13px;
+}
+.quiet:hover{border-color:#ffb45b;color:#ffb45b}
+.primary{
+  border:3px solid #f2a252;background:#d26937;color:#080808;
+  padding:15px 19px;font:12px/1.7 var(--pixel-font);letter-spacing:0;
+  box-shadow:4px 4px 0 #543b4f;max-width:100%;
+}
+.primary:hover{background:#f4a45c;transform:none}
+main{max-width:1050px;padding:30px 22px}
+footer{max-width:1050px;border-top:3px solid #343b7b;gap:14px}
+footer,footer button{font-size:11px}
+.eyebrow,.tag{color:#f5c453;font-size:10px;line-height:1.9;letter-spacing:0;text-transform:uppercase}
+h1{letter-spacing:0;line-height:1.6}
+h2{letter-spacing:0;line-height:1.65}
+h3{line-height:1.6}
+.text{color:#f7b35d;font:12px/1.6 ui-monospace,monospace}
+.text:hover{text-decoration:underline}
+.hero{gap:20px;min-height:320px}
+.hero h1{font-size:clamp(20px,2.6vw,28px);line-height:1.7;letter-spacing:0}
+.hero p{font-size:14px;max-width:390px}
+.small{line-height:1.8}
+.scene{
+  height:300px;border:4px solid #5967ba;border-radius:0;
+  background:#03040a;box-shadow:none;overflow:hidden;
+}
+.scene svg,.scene .planet{display:none}
+.scene::before{
+  content:"";position:absolute;left:9%;top:32%;width:90px;height:60px;
+  background:url('./atari-ship.svg') no-repeat center/contain;
+  image-rendering:pixelated;animation:atari-bob 2s steps(2,end) infinite;
+}
+.scene::after{
+  content:"";position:absolute;right:14%;top:27%;width:75px;height:75px;
+  background:url('./atari-crate.svg') no-repeat center/contain;
+  image-rendering:pixelated;
+}
+.scene .star{width:4px;height:4px;border-radius:0;background:#f1eced}
+.scene-label{background:#21245c;color:#f6dfbe;border-radius:0;bottom:12px;left:12px}
+@keyframes atari-bob{50%{transform:translateY(-6px)}}
+.stats{
+  border-color:#3a3974;flex-wrap:wrap;gap:15px 30px;
+}
+.stats strong{font:16px/1.7 var(--pixel-font);color:#ffba52}
+.stats span{color:#e1dcd3}
+.card,.question,.sector,dialog,.arcade-tease,.pill{
+  border-radius:0;background:#0d1022;border:3px solid #4a4c91;
+  box-shadow:none;
+}
+.card{padding:19px}.card h3{font-size:12px}.card p{font-size:12px}
+.section-head h2{font-size:15px}.section-head{gap:12px}
+.relic{filter:saturate(.7)}
+.pill{display:inline-block;color:#f2e3b9;font:10px/1.9 var(--pixel-font);padding:12px;margin:8px;border-width:2px}
+.wordrow{border-color:#4b4c82}
+.wordrow strong{color:#ffd36f}
+.navrow{gap:13px;flex-wrap:wrap}
+.notice{border:2px solid #e9aa62}
+.mission{
+  max-width:800px;margin:35px auto 30px;
+  position:relative;isolation:isolate;min-height:300px;
+}
+.mission::before{
+  content:"";position:absolute;top:126px;left:-98px;width:77px;height:55px;
+  background:url('./atari-ship.svg') no-repeat center/contain;
+  image-rendering:pixelated;pointer-events:none;z-index:-1;
+  animation:atari-bob 2s steps(2,end) infinite;
+}
+.mission::after{
+  content:"";position:absolute;right:-97px;top:112px;width:82px;height:170px;
+  background-image:url('./atari-asteroid.svg'),url('./atari-crate.svg');
+  background-size:82px 82px,45px 45px;
+  background-position:right top,left bottom;
+  background-repeat:no-repeat;
+  image-rendering:pixelated;pointer-events:none;z-index:-1;
+}
+.mission-top{
+  border-bottom:2px solid #6050ae;padding:0 0 18px;color:#efecdf;
+  gap:12px;font-size:10px;line-height:1.9;text-transform:uppercase;
+}
+.mission-top span:nth-child(2){color:#ffcc63}
+.progress{margin:20px 0 25px;gap:5px}
+.progress i{height:11px;border-radius:0;background:#39364f}
+.progress i.done{background:#e29047;box-shadow:none}
+.question{
+  border:4px solid #625bb5;padding:31px 34px 26px;
+  background:#070710;box-shadow:none;text-align:center;
+}
+.question .eyebrow{display:block;margin:0 0 16px;color:#f5b856}
+.question h1{
+  color:#f2e8df;font-size:clamp(20px,3.5vw,34px);line-height:1.6;
+  letter-spacing:1px;margin:14px 0 9px;overflow-wrap:anywhere;
+  text-shadow:none;
+}
+.question p{font-size:14px;color:#e2deda;line-height:1.7;margin:0}
+.answers{grid-template-columns:1fr;gap:10px;margin:22px auto 0;max-width:590px}
+.answer{
+  background:#4e4d5b;border:3px solid #818193;color:#fff5e6;
+  text-align:center;padding:17px 20px;min-height:61px;
+  font:clamp(10px,1.5vw,13px)/1.85 var(--pixel-font);
+  word-break:break-word;overflow-wrap:anywhere;
+}
+.answer b{
+  color:#ffdc80;font:inherit;margin-right:16px;
+}
+.answer:hover:not(:disabled){background:#63559f;border-color:#b3a7ef}
+.answer:disabled{opacity:1}
+.answer.correct,.answer.correct:disabled{
+  background:#77da71;border-color:#b0ff9c;color:#080d09;
+}
+.answer.correct b{color:#122713}
+.answer.wrong,.answer.wrong:disabled{
+  background:#c66560;border-color:#fbaaa2;color:#160b0a;
+}
+.answer.wrong b{color:#32130b}
+.feedback{border-top:3px solid #5b508f;margin-top:25px}
+.feedback strong{color:#92f08c;font-size:14px}
+.feedback p{margin:13px 0 19px;color:#eee}
+.skip{margin:19px auto 0}
+.tip{color:#aba6c2;max-width:650px;margin:19px auto;text-align:center;font-size:12px}
+.stop-hero{padding:30px 6px 8px}
+.stop-hero h1{font-size:clamp(18px,3vw,25px);color:#ffbb55}
+.stop-hero p{font-size:14px}
+.sector-grid{gap:12px}
+.sector{
+  border:3px solid #6c62a6;background:#101228;padding:22px 12px;min-height:220px;
+}
+.sector:hover{background:#242451;transform:none;border-color:#f6b866}
+.sector strong{font:11px/1.8 var(--pixel-font);color:#eee6dc}
+.sector small{color:#cfcad4;font-size:12px;line-height:1.6}
+.sector-art,.sector-1,.sector-2{
+  background:#4e4c63;border:3px solid #bebbd2;border-radius:0;
+  color:#f5c86d;font-size:32px;
+}
+.explore{color:#f3bf6d;font:11px ui-monospace,monospace}
+.reward{filter:saturate(.75);font-size:66px}
+.mission.center>h1{font-size:clamp(17px,3vw,27px);color:#f8bb65}
+.mission.center h2{font-size:15px}
+.mission.center>p{max-width:720px;margin:17px auto;line-height:1.8}
+.arcade-tease{
+  background:#131326;border-color:#5756a0;padding:20px;
+}
+.arcade-tease h2{font:18px/1.8 var(--pixel-font);letter-spacing:0;color:#f5bb59;text-shadow:none}
+.pixel-wall{transform:none}
+.pixel-wall i{box-shadow:none;border-radius:0}
+.arcade-head h1{
+  font:clamp(20px,3vw,33px)/1.7 var(--pixel-font);
+  color:#f6b459;text-shadow:none;letter-spacing:0;
+}
+.arcade-score span{
+  border:2px solid #6761a5;color:#e4e0da;
+  font:10px/1.9 var(--pixel-font);white-space:nowrap;
+}
+.arcade-score b{color:#ffba61;font-size:12px}
+.arcade-frame{
+  border:5px solid #5a59a5;border-radius:0;box-shadow:none;
+  padding:5px;background:#050507;
+}
+.arcade-bottom strong{font:12px/1.9 var(--pixel-font);color:#94e28e}
+.arcade-bottom p{color:#c7c4c9}
+dialog{background:#10101d;color:#f2eee4}
+dialog p,dialog li{color:#d7d4dc}
+@media(max-width:1080px){
+  .mission::before,.mission::after{display:none}
+}
+@media(max-width:700px){
+  header{padding:16px;min-height:95px;align-items:flex-start}
+  .brand{font-size:clamp(10px,3vw,12px);line-height:2.2}
+  .brand span:last-child{display:inline;color:#ffc05d}
+  .mark{font-size:15px;margin-right:2px}
+  .audio-controls .quiet{font-size:10px;padding:8px}
+  main{padding:18px 15px}
+  .hero{gap:20px}.hero h1{font-size:clamp(17px,4vw,23px)}
+  .scene{height:220px;border-width:3px}
+  .scene::before{width:64px}
+  .scene::after{width:57px}
+  .stats{gap:14px}.stats strong{font-size:11px}
+  .mission{margin:5px auto 17px}
+  .mission-top{flex-wrap:wrap;font-size:9px}
+  .mission-top span{white-space:nowrap}
+  .question{padding:22px 12px;border-width:3px}
+  .question h1{font-size:clamp(17px,5vw,24px)}
+  .answers{gap:9px;margin-top:18px}
+  .answer{font-size:clamp(10px,2.8vw,12px);min-height:56px;padding:14px 6px;border-width:2px}
+  .answer b{margin-right:9px}
+  .primary{font-size:10px;padding:12px 10px;line-height:1.8}
+  .sector-grid{grid-template-columns:1fr}
+  .sector{min-height:unset}
+  .sector strong{font-size:10px}
+  .section-head h2{font-size:12px}
+  .arcade-tease{gap:10px;padding:12px}
+  .arcade-tease h2{font-size:12px}
+  .arcade-score span{font-size:9px}
+  .arcade-bottom strong{font-size:10px}
+  footer{padding:20px 15px;flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){
+  .scene::before,.mission::before{animation:none}
+}

@@ -1,16 +1,25 @@
 const StarBreaker=(()=>{
- const W=720,H=480,colors=['#ff7c92','#ffb56e','#ffe0a0','#9fe7da'];
+ const W=720,H=480,colors=['#d56451','#ea9a48','#e6d07b','#8265bf'];
  function create(canvas,onUpdate,onEnd,soundEnabled=()=>true){const g=canvas.getContext('2d');let raf=0,last=0,state='ready',score=0,lives=3,bricks=[],paddle={x:W/2-48,y:H-45,w:96,h:12},ball={x:W/2,y:H-58,vx:130,vy:-260,r:6},particles=[],wideUntil=0,keys={};
  function resetBricks(){bricks=[];for(let row=0;row<4;row++)for(let col=0;col<9;col++)bricks.push({x:43+col*72,y:76+row*29,w:65,h:20,color:colors[row],live:true})}
  function resetBall(){ball={x:paddle.x+paddle.w/2,y:paddle.y-8,vx:(Math.random()>.5?1:-1)*125,vy:-270,r:6};state='ready';onUpdate({score,lives,state,remaining:bricks.filter(b=>b.live).length})}
- function draw(){g.fillStyle='#101521';g.fillRect(0,0,W,H);g.strokeStyle='#1f3652';g.lineWidth=1;for(let x=0;x<W;x+=40){g.beginPath();g.moveTo(x,0);g.lineTo(x,H);g.stroke()}for(let y=0;y<H;y+=40){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke()}
- g.fillStyle='#243754';for(let i=0;i<37;i++){const x=(i*179+31)%W,y=(i*91+13)%H;g.fillRect(x,y,2,2)}
- g.fillStyle='#9be9da';g.font='bold 15px monospace';g.fillText('STAR BREAKER // SECTOR 01',30,34);g.textAlign='right';g.fillText(String(bricks.filter(b=>b.live).length).padStart(2,'0')+' SIGNALS',W-30,34);g.textAlign='left';
- for(const b of bricks)if(b.live){g.fillStyle=b.color;g.fillRect(b.x,b.y,b.w,b.h-3);g.fillStyle='#ffffff4d';g.fillRect(b.x+3,b.y+2,b.w-6,2);g.fillStyle='#00000040';g.fillRect(b.x,b.y+b.h-4,b.w,3)}
- g.fillStyle='#1a3140';g.fillRect(paddle.x-2,paddle.y+9,paddle.w+4,8);g.fillStyle='#8ee8d6';g.fillRect(paddle.x,paddle.y,paddle.w,paddle.h);g.fillStyle='#e5fff3';g.fillRect(paddle.x+8,paddle.y+2,paddle.w-16,3);
- g.fillStyle='#fff3c7';g.shadowBlur=18;g.shadowColor='#ffcf88';g.beginPath();g.arc(ball.x,ball.y,ball.r,0,Math.PI*2);g.fill();g.shadowBlur=0;
- for(const p of particles){g.globalAlpha=Math.max(0,p.life);g.fillStyle=p.color;g.fillRect(p.x,p.y,4,4)}g.globalAlpha=1;
- if(state==='ready'||state==='paused'){g.fillStyle='#0c172add';g.fillRect(180,220,360,64);g.fillStyle='#f8e9d5';g.textAlign='center';g.font='bold 18px monospace';g.fillText(state==='ready'?'TAP TO LAUNCH':'PAUSED',W/2,259);g.textAlign='left'}
+ function draw(){
+ // Atari-inspired graphics only. Physics, collisions, rewards, controls and sounds are unchanged.
+ g.clearRect(0,0,W,H);
+ g.fillStyle='#050507';g.fillRect(0,0,W,H);
+ g.fillStyle='#c7c3c8';for(let i=0;i<25;i++){const x=(i*179+31)%W,y=(i*91+51)%H;g.fillRect(x,y,3,3)}
+ g.fillStyle='#f4b04e';g.font='bold 16px monospace';g.fillText('STAR BREAKER',26,33);
+ g.textAlign='right';g.fillStyle='#e9e7df';g.fillText(String(bricks.filter(b=>b.live).length).padStart(2,'0')+' BRICKS',W-26,33);g.textAlign='left';
+ g.fillStyle='#5753a4';g.fillRect(12,48,W-24,4);
+ for(const b of bricks)if(b.live){g.fillStyle=b.color;g.fillRect(Math.round(b.x),Math.round(b.y),b.w,b.h-3)}
+ g.fillStyle='#c9c4e7';g.fillRect(Math.round(paddle.x),paddle.y,Math.round(paddle.w),paddle.h);
+ g.fillStyle='#ffedb3';g.fillRect(Math.round(ball.x-ball.r),Math.round(ball.y-ball.r),ball.r*2,ball.r*2);
+ for(const p of particles){g.globalAlpha=Math.max(0,p.life);g.fillStyle=p.color;g.fillRect(Math.round(p.x),Math.round(p.y),5,5)}g.globalAlpha=1;
+ if(state==='ready'||state==='paused'){
+  g.fillStyle='#29234d';g.fillRect(169,218,382,69);
+  g.fillStyle='#ffe4a1';g.textAlign='center';g.font='bold 19px monospace';
+  g.fillText(state==='ready'?'TAP TO LAUNCH':'PAUSED',W/2,260);g.textAlign='left';
+ }
  }
  function ping(ok){if(!soundEnabled())return;try{const c=window.audioContext||(window.audioContext=new(window.AudioContext||window.webkitAudioContext)());c.resume();const o=c.createOscillator(),v=c.createGain();o.type=ok?'square':'triangle';o.frequency.setValueAtTime(ok?420:230,c.currentTime);o.frequency.exponentialRampToValueAtTime(ok?710:120,c.currentTime+.07);v.gain.setValueAtTime(.03,c.currentTime);v.gain.exponentialRampToValueAtTime(.001,c.currentTime+.1);o.connect(v);v.connect(c.destination);o.start();o.stop(c.currentTime+.11)}catch(e){}}
  function finish(win){state=win?'won':'lost';cancelAnimationFrame(raf);raf=0;onUpdate({score,lives,state,remaining:bricks.filter(b=>b.live).length});onEnd({score,win})}
