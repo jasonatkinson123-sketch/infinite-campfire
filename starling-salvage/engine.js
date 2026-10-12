@@ -22,7 +22,7 @@ function answer(s,id,choice,words){const q=s.session;if(q.feedback||q.done||q.ph
 }
 function next(s){const q=s.session;if(!q.feedback||q.done)return false;q.feedback=null;q.index++;
  if(q.index===9&&q.ids.length===9){const missed=q.answers.filter(a=>!a.ok).map(a=>a.id);const candidates=[...new Set([...missed,...q.ids])];q.ids.push(...candidates.slice(0,3));}
- if(q.index>=TOTAL){q.done=true;if(!s.days.includes(q.date)||q.bonus&&s.expandedTrial!==q.date){if(!s.days.includes(q.date))s.days.push(q.date);if(q.bonus)s.expandedTrial=q.date;s.credits+=3;const item=s.relics.length%24;s.relics.push(item);q.reward=item;}}
+ if(q.index>=TOTAL){q.done=true;if(!s.days.includes(q.date))s.days.push(q.date);s.credits+=3;const item=s.relics.length%24;s.relics.push(item);q.reward=item;}
  else if(q.index%3===0)q.phase='stop';return true;}
 function claimStop(s,choice){const q=s.session;if(!q||q.done||q.phase!=='stop'||![0,1,2].includes(choice))return false;q.stops.push(choice);q.finds.push(choice);s.credits+=1;q.phase='find';return true;}
 function leaveStop(s){const q=s.session;if(!q||q.phase!=='find')return false;q.phase=null;return true;}
