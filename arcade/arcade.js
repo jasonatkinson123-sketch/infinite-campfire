@@ -7,6 +7,7 @@ const KEY="little-arcade-data-v1";
 let db={used:{},best:{},saved:{},session:null,sound:true};
 try{let v=JSON.parse(localStorage.getItem(KEY));if(v&&typeof v==="object")db=Object.assign(db,v)}catch(e){}
 if(db.wordRewardRules!==2){if(db.session?.from==="words")db.session.seconds=0;db.wordRewardRules=2;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
+if(db.session?.seconds>180){db.session.seconds=180;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 let origin="words",gameName=null,g=null,held={},last=0,lastSave=0,ctxAudio=null;
 const canvas=$("canvas"),c=canvas.getContext("2d");
 function save(){try{if(gameName&&g)db.saved[gameName]=g;localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
