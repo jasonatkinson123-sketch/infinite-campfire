@@ -6,7 +6,7 @@ const labels={pong:["PONG","▌●▐","Slide the circle up/down or drag the pad
 const KEY="little-arcade-data-v1";
 let db={used:{},best:{},saved:{},session:null,sound:true};
 try{let v=JSON.parse(localStorage.getItem(KEY));if(v&&typeof v==="object")db=Object.assign(db,v)}catch(e){}
-let origin="words",gameName=null,g=null,held={},last=0,lastSave=0,grace=null,ctxAudio=null;
+let origin="words",gameName=null,g=null,held={},last=0,lastSave=0,ctxAudio=null;
 const canvas=$("canvas"),c=canvas.getContext("2d");
 function save(){try{if(gameName&&g)db.saved[gameName]=g;localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 function beep(f=440){if(!db.sound)return;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!ctxAudio)ctxAudio=new AC();ctxAudio.resume();let o=ctxAudio.createOscillator(),v=ctxAudio.createGain(),t=ctxAudio.currentTime;o.type="square";o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*1.2,t+.09);v.gain.setValueAtTime(.012,t);v.gain.exponentialRampToValueAtTime(.0001,t+.1);o.connect(v);v.connect(ctxAudio.destination);o.start(t);o.stop(t+.11)}catch(e){}}
@@ -21,11 +21,11 @@ if(!db.used[ticket]){db.used[ticket]=Date.now();let left=db.session?.seconds>0?d
 else if(db.session?.ticket===ticket&&db.session.seconds>0)origin=db.session.from;
 }
 if(db.session?.seconds>0){origin=db.session.from||origin;lobby()}else if(ticket&&db.used[ticket]){screen("done")}else screen("gate");links()}
-function lobby(){if(!db.session||db.session.seconds<=0){endPass();return}gameName=null;g=null;grace=null;held={};releasePad();
+function lobby(){if(!db.session||db.session.seconds<=0){endPass();return}gameName=null;g=null;held={};releasePad();
 $("lobby-time").textContent=clock(db.session.seconds);
 $("cabinets").innerHTML=names.map(n=>'<button class="cabinet" data-game="'+n+'"><span class="icon">'+labels[n][1]+'</span><strong>'+labels[n][0]+'</strong><small>BEST '+(db.best[n]||0)+'</small></button>').join("");
 document.querySelectorAll("[data-game]").forEach(b=>b.onclick=()=>select(b.dataset.game));screen("lobby");links()}
-function select(n){if(!names.includes(n)||!db.session||db.session.seconds<=0)return;gameName=n;g=db.saved[n]&&!db.saved[n].over?db.saved[n]:make(n);held={};releasePad();pad.classList.toggle("asteroids",n==="asteroids");pad.setAttribute("aria-label",n==="asteroids"?"Touch joystick. Left and right rotate; upper half thrusts; upper corners combine turning and thrust. Keyboard arrows also work.":"Touch joystick. Slide toward a direction; keyboard arrows also work.");grace=null;$("title").textContent=labels[n][0];$("instructions").textContent=labels[n][2];$("clock").textContent=clock(db.session.seconds);$("best").textContent="BEST "+(db.best[n]||0);screen("game");canvas.focus({preventScroll:true});beep(620)}
+function select(n){if(!names.includes(n)||!db.session||db.session.seconds<=0)return;gameName=n;g=db.saved[n]&&!db.saved[n].over?db.saved[n]:make(n);held={};releasePad();pad.classList.toggle("asteroids",n==="asteroids");pad.setAttribute("aria-label",n==="asteroids"?"Touch joystick. Left and right rotate; upper half thrusts; upper corners combine turning and thrust. Keyboard arrows also work.":"Touch joystick. Slide toward a direction; keyboard arrows also work.");$("title").textContent=labels[n][0];$("instructions").textContent=labels[n][2];$("clock").textContent=clock(db.session.seconds);$("best").textContent="BEST "+(db.best[n]||0);screen("game");canvas.focus({preventScroll:true});beep(620)}
 function endPass(){if(g&&gameName)db.saved[gameName]=g;if(db.session)db.session.seconds=0;save();gameName=null;g=null;screen("done");links()}
 function ball(){return {x:320,y:230,vx:170,vy:-170}}
 function rock(i,r=25){return {x:45+(i*117)%540,y:40+(i*79)%360,vx:(i%2?1:-1)*(32+i*4),vy:(i%3-1)*29,r:r}}
@@ -160,8 +160,9 @@ if(gameName==="munch"){const m=g.munch,side=27,ox=90,oy=51;
 
 if(g.over){rect(124,185,393,99,"#241b3f");txt("GAME OVER",320,237,29,"#ffd078","center");txt("NEW RUN OR PICK ANOTHER GAME",320,265,12,"#fff2cd","center")}}
 function tick(t){let dt=last?Math.min((t-last)/1000,.06):0;last=t;
-if(g&&gameName&&db.session&&!document.hidden&&!g.over){if(db.session.seconds>0){db.session.seconds=Math.max(0,db.session.seconds-dt);if(db.session.seconds<=0)grace=10}let lostLife=step(dt);if(grace!==null){grace-=dt;if(lostLife||grace<=0)endPass()}}
-if(g&&gameName){draw();$("clock").textContent=clock(db.session.seconds);$("status").textContent="SCORE "+g.score+" · LIVES "+g.lives+(grace===null?"":" · FINAL LIFE!")+(g.over?" · SELECT NEW RUN":"");if(g.score>(db.best[gameName]||0)){db.best[gameName]=g.score;$("best").textContent="BEST "+g.score}}
+if(g&&gameName&&db.session&&db.session.seconds<=0)endPass();
+else if(g&&gameName&&db.session&&!document.hidden&&!g.over){db.session.seconds=Math.max(0,db.session.seconds-dt);if(db.session.seconds<=0)endPass();else step(dt)}
+if(g&&gameName){draw();$("clock").textContent=clock(db.session.seconds);$("status").textContent="SCORE "+g.score+" · LIVES "+g.lives+(g.over?" · SELECT NEW RUN":"");if(g.score>(db.best[gameName]||0)){db.best[gameName]=g.score;$("best").textContent="BEST "+g.score}}
 if(t-lastSave>1000){lastSave=t;save()}
 requestAnimationFrame(tick)}
 function control(id,key,tap){let b=$(id);b.addEventListener("pointerdown",e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);held[key]=true;if(gameName==="munch"&&g&&MN[key])g.munch.want=key;if(tap)held[tap]=true;beep(300)});for(let ev of ["pointerup","pointercancel","lostpointercapture"])b.addEventListener(ev,()=>held[key]=false)}
