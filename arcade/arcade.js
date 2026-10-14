@@ -159,9 +159,9 @@ if(gameName==="munch"){const m=g.munch,side=27,ox=90,oy=51;
  }
 
 if(g.over){rect(124,185,393,99,"#241b3f");txt("GAME OVER",320,237,29,"#ffd078","center");txt("NEW RUN OR PICK ANOTHER GAME",320,265,12,"#fff2cd","center")}}
-function tick(t){let dt=last?Math.min((t-last)/1000,.06):0;last=t;
+function tick(t){let elapsed=last?Math.max(0,(t-last)/1000):0,dt=Math.min(elapsed,.06);last=t;
 if(g&&gameName&&db.session&&db.session.seconds<=0)endPass();
-else if(g&&gameName&&db.session&&!document.hidden&&!g.over){db.session.seconds=Math.max(0,db.session.seconds-dt);if(db.session.seconds<=0)endPass();else step(dt)}
+else if(g&&gameName&&db.session&&!document.hidden&&!g.over){db.session.seconds=Math.max(0,db.session.seconds-elapsed);if(db.session.seconds<=0)endPass();else step(dt)}
 if(g&&gameName){draw();$("clock").textContent=clock(db.session.seconds);$("status").textContent="SCORE "+g.score+" · LIVES "+g.lives+(g.over?" · SELECT NEW RUN":"");if(g.score>(db.best[gameName]||0)){db.best[gameName]=g.score;$("best").textContent="BEST "+g.score}}
 if(t-lastSave>1000){lastSave=t;save()}
 requestAnimationFrame(tick)}
