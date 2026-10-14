@@ -20,7 +20,7 @@ if(ticket&&/^[A-Za-z0-9_-]{12,90}$/.test(ticket)&&(from==="words"||from==="math"
 if(!db.used[ticket]){db.used[ticket]=Date.now();let left=db.session?.seconds>0?db.session.seconds:0;db.session={ticket:ticket,from:from,seconds:Math.min(600,left+180)};save()}
 else if(db.session?.ticket===ticket&&db.session.seconds>0)origin=db.session.from;
 }
-if(db.session?.seconds>0){origin=db.session.from||origin;lobby()}else screen("gate");links()}
+if(db.session?.seconds>0){origin=db.session.from||origin;lobby()}else if(ticket&&db.used[ticket]){screen("done")}else screen("gate");links()}
 function lobby(){if(!db.session||db.session.seconds<=0){endPass();return}gameName=null;g=null;grace=null;
 $("lobby-time").textContent=clock(db.session.seconds);
 $("cabinets").innerHTML=names.map(n=>'<button class="cabinet" data-game="'+n+'"><span class="icon">'+labels[n][1]+'</span><strong>'+labels[n][0]+'</strong><small>BEST '+(db.best[n]||0)+'</small></button>').join("");
