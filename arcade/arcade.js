@@ -6,6 +6,7 @@ const labels={pong:["PONG","▌●▐","Slide the circle up/down or drag the pad
 const KEY="little-arcade-data-v1";
 let db={used:{},best:{},saved:{},session:null,sound:true};
 try{let v=JSON.parse(localStorage.getItem(KEY));if(v&&typeof v==="object")db=Object.assign(db,v)}catch(e){}
+if(db.wordRewardRules!==2){if(db.session?.from==="words")db.session.seconds=0;db.wordRewardRules=2;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 let origin="words",gameName=null,g=null,held={},last=0,lastSave=0,ctxAudio=null;
 const canvas=$("canvas"),c=canvas.getContext("2d");
 function save(){try{if(gameName&&g)db.saved[gameName]=g;localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
@@ -17,7 +18,7 @@ function links(){$("lobby-return").href=homeUrl(false);$("done-return").href=hom
 function boot(){let p=new URLSearchParams(location.search),ticket=p.get("ticket"),from=p.get("from");
 if(from==="math"||from==="words")origin=from;else if(db.session)origin=db.session.from||"words";
 if(ticket&&/^[A-Za-z0-9_-]{12,90}$/.test(ticket)&&(from==="words"||from==="math")){
-if(!db.used[ticket]){db.used[ticket]=Date.now();let left=db.session?.seconds>0?db.session.seconds:0;db.session={ticket:ticket,from:from,seconds:Math.min(600,left+180)};save()}
+if(!db.used[ticket]){db.used[ticket]=Date.now();db.session={ticket:ticket,from:from,seconds:180};save()}
 else if(db.session?.ticket===ticket&&db.session.seconds>0)origin=db.session.from;
 }
 if(db.session?.seconds>0){origin=db.session.from||origin;lobby()}else if(ticket&&db.used[ticket]){screen("done")}else screen("gate");links()}
