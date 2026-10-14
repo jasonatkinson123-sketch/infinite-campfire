@@ -2,7 +2,7 @@
 "use strict";
 const $=id=>document.getElementById(id);
 const names=["pong","breakout","invaders","asteroids","frogger","munch"];
-const labels={pong:["PONG","▌●▐","Move with up/down or drag. Score seven points."],breakout:["BREAKOUT","▰●","Move with left/right or drag. Fire launches the ball."],invaders:["SPACE INVADERS","▣▣▣","Move left/right. Press Fire or Space to shoot."],asteroids:["ASTEROIDS","◇✦","Left/right rotate, up thrusts, Fire shoots."],frogger:["FROGGER","♣⇧","Use arrow keys or the directional buttons. Cross the river and road."],munch:["MUNCH MAZE","◉◇","Move with arrow keys or touch. Fill the maze with links. Avoid the chasers. Power cells let you chase them!"]};
+const labels={pong:["PONG","▌●▐","Slide the circle up/down or drag the paddle. Score seven points."],breakout:["BREAKOUT","▰●","Slide the circle left/right or drag the paddle. Fire launches the ball."],invaders:["SPACE INVADERS","▣▣▣","Slide left/right to move. Press Fire or Space to shoot."],asteroids:["ASTEROIDS","◇✦","Slide left/right to turn and upward to thrust. Up-left/up-right do both. Fire shoots."],frogger:["FROGGER","♣⇧","Slide toward a direction for one hop. Return to center and slide again for another."],munch:["MUNCH MAZE","◉◇","Slide around the circle to steer. Fill the maze with links. Avoid the chasers. Power cells let you chase them!"]};
 const KEY="little-arcade-data-v1";
 let db={used:{},best:{},saved:{},session:null,sound:true};
 try{let v=JSON.parse(localStorage.getItem(KEY));if(v&&typeof v==="object")db=Object.assign(db,v)}catch(e){}
@@ -21,11 +21,11 @@ if(!db.used[ticket]){db.used[ticket]=Date.now();let left=db.session?.seconds>0?d
 else if(db.session?.ticket===ticket&&db.session.seconds>0)origin=db.session.from;
 }
 if(db.session?.seconds>0){origin=db.session.from||origin;lobby()}else if(ticket&&db.used[ticket]){screen("done")}else screen("gate");links()}
-function lobby(){if(!db.session||db.session.seconds<=0){endPass();return}gameName=null;g=null;grace=null;held={};padPointer=null;setPadDirection(null);
+function lobby(){if(!db.session||db.session.seconds<=0){endPass();return}gameName=null;g=null;grace=null;held={};releasePad();
 $("lobby-time").textContent=clock(db.session.seconds);
 $("cabinets").innerHTML=names.map(n=>'<button class="cabinet" data-game="'+n+'"><span class="icon">'+labels[n][1]+'</span><strong>'+labels[n][0]+'</strong><small>BEST '+(db.best[n]||0)+'</small></button>').join("");
 document.querySelectorAll("[data-game]").forEach(b=>b.onclick=()=>select(b.dataset.game));screen("lobby");links()}
-function select(n){if(!names.includes(n)||!db.session||db.session.seconds<=0)return;gameName=n;g=db.saved[n]&&!db.saved[n].over?db.saved[n]:make(n);held={};padPointer=null;setPadDirection(null);grace=null;$("title").textContent=labels[n][0];$("instructions").textContent=labels[n][2];$("clock").textContent=clock(db.session.seconds);$("best").textContent="BEST "+(db.best[n]||0);screen("game");canvas.focus({preventScroll:true});beep(620)}
+function select(n){if(!names.includes(n)||!db.session||db.session.seconds<=0)return;gameName=n;g=db.saved[n]&&!db.saved[n].over?db.saved[n]:make(n);held={};releasePad();pad.classList.toggle("asteroids",n==="asteroids");pad.setAttribute("aria-label",n==="asteroids"?"Touch joystick. Left and right rotate; upper half thrusts; upper corners combine turning and thrust. Keyboard arrows also work.":"Touch joystick. Slide toward a direction; keyboard arrows also work.");grace=null;$("title").textContent=labels[n][0];$("instructions").textContent=labels[n][2];$("clock").textContent=clock(db.session.seconds);$("best").textContent="BEST "+(db.best[n]||0);screen("game");canvas.focus({preventScroll:true});beep(620)}
 function endPass(){if(g&&gameName)db.saved[gameName]=g;if(db.session)db.session.seconds=0;save();gameName=null;g=null;screen("done");links()}
 function ball(){return {x:320,y:230,vx:170,vy:-170}}
 function rock(i,r=25){return {x:45+(i*117)%540,y:40+(i*79)%360,vx:(i%2?1:-1)*(32+i*4),vy:(i%3-1)*29,r:r}}
@@ -165,21 +165,28 @@ if(g&&gameName){draw();$("clock").textContent=clock(db.session.seconds);$("statu
 if(t-lastSave>1000){lastSave=t;save()}
 requestAnimationFrame(tick)}
 function control(id,key,tap){let b=$(id);b.addEventListener("pointerdown",e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);held[key]=true;if(gameName==="munch"&&g&&MN[key])g.munch.want=key;if(tap)held[tap]=true;beep(300)});for(let ev of ["pointerup","pointercancel","lostpointercapture"])b.addEventListener(ev,()=>held[key]=false)}
-const pad=$("dpad");let padPointer=null,padDirection=null;
-function directionAt(e){const r=pad.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2;
- if(Math.max(Math.abs(dx),Math.abs(dy))<19)return null;
- return Math.abs(dx)>Math.abs(dy)?(dx<0?"ArrowLeft":"ArrowRight"):(dy<0?"ArrowUp":"ArrowDown")}
-function setPadDirection(next){if(padDirection===next)return;
- if(padDirection)held[padDirection]=false;padDirection=next;
- pad.querySelectorAll("[data-dir]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.dir===next)));
- if(next){held[next]=true;for(const k of ["UpTap","DownTap","LeftTap","RightTap"])held[k]=false;const tap={ArrowUp:"UpTap",ArrowDown:"DownTap",ArrowLeft:"LeftTap",ArrowRight:"RightTap"}[next];held[tap]=true;
- if(gameName==="munch"&&g)g.munch.want=next;beep(300)}}
-pad.addEventListener("pointerdown",e=>{if(padPointer!==null)return;e.preventDefault();padPointer=e.pointerId;pad.setPointerCapture?.(e.pointerId);setPadDirection(directionAt(e))});
-pad.addEventListener("pointermove",e=>{if(e.pointerId===padPointer){e.preventDefault();setPadDirection(directionAt(e))}});
-for(const ev of ["pointerup","pointercancel","lostpointercapture"])pad.addEventListener(ev,e=>{if(e.pointerId===padPointer){padPointer=null;setPadDirection(null)}});
+const pad=$("dpad");let padPointer=null,padDirections=[];
+function padInput(e){const r=pad.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2;
+ const radius=Math.min(r.width,r.height)/2-12,length=Math.hypot(dx,dy),scale=length?Math.min(length,radius)/length:0;
+ pad.style.setProperty("--stick-x",Math.round(dx*scale*.60)+"px");pad.style.setProperty("--stick-y",Math.round(dy*scale*.60)+"px");
+ if(length<24)return [];
+ if(gameName==="asteroids"){let dirs=[];if(dx< -28)dirs.push("ArrowLeft");else if(dx>28)dirs.push("ArrowRight");if(dy< -28)dirs.push("ArrowUp");return dirs}
+ return [Math.abs(dx)>Math.abs(dy)?(dx<0?"ArrowLeft":"ArrowRight"):(dy<0?"ArrowUp":"ArrowDown")]}
+function setPadDirections(next){const old=padDirections,unchanged=old.length===next.length&&old.every((d,i)=>d===next[i]);if(unchanged)return;
+ for(const d of old)if(!next.includes(d))held[d]=false;
+ padDirections=next;pad.dataset.active=next.join(" ");
+ for(const d of next)if(!old.includes(d)){held[d]=true;
+  if(gameName==="frogger"){const tap={ArrowUp:"UpTap",ArrowDown:"DownTap",ArrowLeft:"LeftTap",ArrowRight:"RightTap"}[d];held[tap]=true}
+  if(gameName==="munch"&&g)g.munch.want=d;
+ }
+ if(next.length)beep(300)}
+function releasePad(){padPointer=null;setPadDirections([]);pad.style.setProperty("--stick-x","0px");pad.style.setProperty("--stick-y","0px")}
+pad.addEventListener("pointerdown",e=>{if(padPointer!==null)return;e.preventDefault();padPointer=e.pointerId;pad.setPointerCapture?.(e.pointerId);setPadDirections(padInput(e))});
+pad.addEventListener("pointermove",e=>{if(e.pointerId===padPointer){e.preventDefault();setPadDirections(padInput(e))}});
+for(const ev of ["pointerup","pointercancel","lostpointercapture"])pad.addEventListener(ev,e=>{if(e.pointerId===padPointer)releasePad()});
 control("fire","Fire");
 window.addEventListener("keydown",e=>{if(gameName&&["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key))e.preventDefault();if(gameName==="munch"&&g&&MN[e.key])g.munch.want=e.key;if(!held[e.key]){let tap={ArrowUp:"UpTap",ArrowDown:"DownTap",ArrowLeft:"LeftTap",ArrowRight:"RightTap"}[e.key];if(tap)held[tap]=true}held[e.key]=true});
-window.addEventListener("keyup",e=>held[e.key]=false);window.addEventListener("blur",()=>{held={};padPointer=null;setPadDirection(null);save()});document.addEventListener("visibilitychange",()=>{last=0;if(document.hidden){held={};padPointer=null;setPadDirection(null);save()}});
+window.addEventListener("keyup",e=>held[e.key]=false);window.addEventListener("blur",()=>{held={};releasePad();save()});document.addEventListener("visibilitychange",()=>{last=0;if(document.hidden){held={};releasePad();save()}});
 function pointer(e){if(!g)return;let r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*640/r.width,y=(e.clientY-r.top)*480/r.height;if(gameName==="pong")g.py=clamp(y,51,429);if(gameName==="breakout")g.px=clamp(x,58,582);if(gameName==="invaders")g.px=clamp(x,25,615)}
 canvas.addEventListener("pointermove",pointer);canvas.addEventListener("pointerdown",e=>{pointer(e);canvas.focus();if(gameName==="breakout"||gameName==="invaders"){held.Fire=true;setTimeout(()=>held.Fire=false,120)}});
 $("games").onclick=()=>{save();lobby()};$("new").onclick=()=>{if(gameName){g=make(gameName);beep(550)}};$("sound").onclick=()=>{db.sound=!db.sound;$("sound").textContent=db.sound?"♪ SOUND ON":"♪ SOUND OFF";save();if(db.sound)beep(550)};
